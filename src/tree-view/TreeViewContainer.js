@@ -1,52 +1,27 @@
 import { useState } from "react";
 import TreeViewItem from "../components/TreeViewItem";
+import { findObjectById } from "../utils/utility";
 
 export default function TreeViewContainer() {
   const initialState = {
     id: "root",
-    name: "Parent",
-    isExpandable: true,
-    children: [
-      {
-        id: "1",
-        name: "Child Node - 1",
-      },
-      {
-        id: "2",
-        name: "Child Node - 2",
-        isExpandable: true,
-        children: [
-          {
-            id: "2_1",
-            name: "Child Node - 2_1",
-          },
-          {
-            id: "2_2",
-            name: "Child Node - 2_2",
-          },
-        ],
-      },
-    ],
+    title: "Parent",
+    targetId: "root",
+    expanded: true,
+    children: [],
   };
 
   const [treeViewData, setTreeViewData] = useState(initialState);
-  const renderTree = (nodes) => {
-    console.log(nodes.children);
-    return (
-      <>
-        {Array.isArray(nodes.children) ? (
-          <ul>{nodes.children.map((node) => renderTree(node))}</ul>
-        ) : (
-          renderNode(nodes)
-        )}
-      </>
-    );
-  };
 
   const renderTreeNew = (nodes) => {
     console.log(nodes.children);
     return (
-      <TreeViewItem id={nodes.id} name={nodes.name}>
+      <TreeViewItem
+        id={nodes.id}
+        title={nodes.title}
+        handleCreateNode={createNode}
+        handleDeleteNode={deleteNode}
+      >
         {Array.isArray(nodes.children) ? (
           <ul>{nodes.children.map((node) => renderTreeNew(node))}</ul>
         ) : null}
@@ -54,27 +29,32 @@ export default function TreeViewContainer() {
     );
   };
 
-  const renderNode = (node) => {
-    console.log("renderNode", node);
-    return (
-      <li key={node.id} id={node.id}>
-        {node.name}
-      </li>
-      //node.name
-    );
+  const createNode = (data) => {
+    console.log("saveNode", data);
+    const newTreeView = { ...treeViewData };
+    let node = findObjectById(newTreeView, data.targetId);
+    if (node) {
+      node.children.push(data);
+    }
+    console.log(newTreeView);
+    setTreeViewData(newTreeView);
   };
 
-  const renderChildren = (node) => {
-    console.log("renderNode", node);
-    return (
-      <li key={node.id} id={node.id}>
-        {node.name}
-      </li>
-    );
-  };
-
-  const createNode = (node) => {
-    console.log("saveNode");
+  const deleteNode = (data) => {
+    //console.log("deleteNode", data);
+    const newTreeView = { ...treeViewData };
+    const node = findObjectById(newTreeView, data.targetId);
+    const parentNode = findObjectById(newTreeView, node.targetId);
+    console.log(node, parentNode);
+    console.table(parentNode.children);
+    if (parentNode && parentNode.children) {
+      const filterChildren = parentNode.children.filter(
+        (item) => item.id !== node.id
+      );
+      console.table(filterChildren);
+      parentNode.children = [...filterChildren];
+      setTreeViewData(newTreeView);
+    }
   };
 
   const render = () => {
