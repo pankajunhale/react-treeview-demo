@@ -12,7 +12,6 @@ export default function TreeViewItem({
   const DEFAULT_NODE_NAME = "New Node";
   const [nodeTitle, setNodeTitle] = useState(title || "");
   const [isEditing, setIsEditing] = useState(false);
-  console.log(new Date(), nodeTitle, id);
 
   const handleAdd = (targetId) => {
     const data = {
@@ -38,7 +37,6 @@ export default function TreeViewItem({
       title: nodeTitle,
       targetId,
     };
-    console.log(new Date(), data);
     setIsEditing(false);
     handleSaveNode(data);
   };
