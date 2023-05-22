@@ -1,4 +1,4 @@
-This is a ReactJs application to demonstrate the tree view structure whitout any external library.
+This is a ReactJs application to demonstrate the tree view structure whithout any external library.
 
 ## Getting Started
 
