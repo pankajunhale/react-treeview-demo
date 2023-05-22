@@ -1,14 +1,18 @@
 import { useState } from "react";
+import Button from "react-bootstrap/Button";
 
 export default function TreeViewItem({
   id,
   title,
   handleCreateNode,
   handleDeleteNode,
+  handleSaveNode,
   children,
 }) {
   const DEFAULT_NODE_NAME = "New Node";
   const [nodeTitle, setNodeTitle] = useState(title || "");
+  const [isEditing, setIsEditing] = useState(false);
+  console.log(new Date(), nodeTitle, id);
 
   const handleAdd = (targetId) => {
     const data = {
@@ -22,11 +26,21 @@ export default function TreeViewItem({
 
   const handleDelete = (targetId) => {
     const data = {
+      targetId,
+    };
+    handleDeleteNode(data);
+  };
+
+  const handleSubmit = (e, targetId) => {
+    e.preventDefault();
+    const data = {
       id,
       title: nodeTitle,
       targetId,
     };
-    handleDeleteNode(data);
+    console.log(new Date(), data);
+    setIsEditing(false);
+    handleSaveNode(data);
   };
 
   const renderButton = (id) => {
@@ -34,13 +48,51 @@ export default function TreeViewItem({
       <>
         {id !== "root" ? (
           <>
-            <button onClick={() => handleAdd(id)}>Add</button>
-            <button onClick={() => handleDelete(id)}>Remove</button>
+            {" "}
+            <Button
+              variant="primary"
+              size="sm"
+              type="button"
+              onClick={() => handleAdd(id)}
+            >
+              Add
+            </Button>{" "}
+            <Button
+              variant="primary"
+              size="sm"
+              type="button"
+              onClick={() => handleDelete(id)}
+            >
+              Remove
+            </Button>
           </>
         ) : (
-          <button onClick={() => handleAdd(id)}>Add</button>
+          <>
+            {" "}
+            <Button
+              variant="primary"
+              size="sm"
+              type="button"
+              onClick={() => handleAdd(id)}
+            >
+              Add
+            </Button>
+          </>
         )}
       </>
+    );
+  };
+
+  const renderForm = (isEditing) => {
+    return !isEditing ? (
+      <span onClick={() => setIsEditing(true)}>{title}</span>
+    ) : (
+      <input
+        value={nodeTitle}
+        onChange={(e) => {
+          setNodeTitle(e.target.value);
+        }}
+      />
     );
   };
 
@@ -48,18 +100,10 @@ export default function TreeViewItem({
     if (id && title) {
       return (
         <li key={id}>
-          {id}
-          <input
-            value={nodeTitle}
-            onChange={(e) => {
-              setNodeTitle(e.target.value);
-              console.log(e.target.value);
-            }}
-            onSubmit={(e) => {
-              console.log(e.target.value);
-            }}
-          />
-          {renderButton(id)}
+          <form onSubmit={(e) => handleSubmit(e, id)}>
+            {renderForm(isEditing)}
+            {renderButton(id)}
+          </form>
           {children}
         </li>
       );
