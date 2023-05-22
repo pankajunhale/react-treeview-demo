@@ -2,9 +2,9 @@ This is a ReactJs application to demonstrate the tree view structure whitout any
 
 ## Getting Started
 
-Clone the project: git clone https://github.com/pankajunhale/react-treeview-demo.git
-Install the packages: npm install
-Start the server: npm start
+- Clone the project: git clone https://github.com/pankajunhale/react-treeview-demo.git
+- Install the packages: npm install
+- Start the server: npm start
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
