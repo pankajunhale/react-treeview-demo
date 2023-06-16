@@ -1,6 +1,6 @@
 import { useState } from "react";
 import TreeViewItem from "../components/TreeViewItem";
-import { findObjectById } from "../utils/Utility";
+import { findObjectById } from "../utils/utility";
 
 export default function TreeViewContainer() {
   const initialState = {
